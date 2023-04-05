@@ -1,5 +1,7 @@
 "use client";
 
+import chatStyle from "@/app/components/chat.module.scss";
+
 require("../polyfill");
 
 import { useState, useEffect } from "react";
@@ -16,8 +18,8 @@ import AddIcon from "../icons/add.svg";
 import LoadingIcon from "../icons/three-dots.svg";
 import CloseIcon from "../icons/close.svg";
 
-import { useChatStore } from "../store";
-import { isMobileScreen } from "../utils";
+import {Message, ROLES, useChatStore} from "../store";
+import {copyToClipboard, isMobileScreen} from "../utils";
 import Locale from "../locales";
 import { ChatList } from "./chat-list";
 import { Chat } from "./chat";
@@ -25,6 +27,10 @@ import { Chat } from "./chat";
 import dynamic from "next/dynamic";
 import { REPO_URL } from "../constant";
 import { ErrorBoundary } from "./error";
+import BrainIcon from "@/app/icons/brain.svg";
+import {Modal} from "@/app/components/ui-lib";
+import CopyIcon from "@/app/icons/copy.svg";
+import DeleteIcon from "@/app/icons/delete.svg";
 
 export function Loading(props: { noLogo?: boolean }) {
   return (
@@ -82,6 +88,45 @@ const useHasHydrated = () => {
   return hasHydrated;
 };
 
+function PromptToast(props: {
+  showToast?: boolean;
+  showModal?: boolean;
+  setShowModal: (_: boolean) => void;
+}) {
+  const chatStore = useChatStore();
+  const session = chatStore.currentSession();
+  const context = session.context;
+
+  return (
+      <div className={chatStyle["prompt-toast"]} key="prompt-toast">
+        {props.showModal && (
+            <div className="modal-mask">
+              <Modal
+                  title={"公告"}
+                  onClose={() => props.setShowModal(false)}
+                  actions={[
+                  ]}
+              >
+                <>
+                  <div style={{justifyContent: "center", alignItems: "center"}}>
+                    <div>
+                      <img src={"/qr.png"} style={{width: "15em"}} />
+                    </div>
+                    <div style={{justifyContent: "center", alignItems: "center"}}>
+                      <span>ChatGPT<br/>国内最快、最好用的ChatGpt 站点！<br/>完全免梯、免费使用！<br/>进群申请授权码即用！<br/>群内每日分享GPT使用秘籍和GPT赚钱项目！
+                      </span>
+                    </div>
+                  </div>
+                </>
+              </Modal>
+            </div>
+        )}
+      </div>
+  );
+}
+
+
+
 function _Home() {
   const [createNewSession, currentIndex, removeSession] = useChatStore(
     (state) => [
@@ -92,6 +137,7 @@ function _Home() {
   );
   const loading = !useHasHydrated();
   const [showSideBar, setShowSideBar] = useState(true);
+  const [showPromptModal, setShowPromptModal] = useState(true);
 
   // setting
   const [openSettings, setOpenSettings] = useState(false);
@@ -102,7 +148,6 @@ function _Home() {
   if (loading) {
     return <Loading />;
   }
-
   return (
     <div
       className={`${
@@ -123,7 +168,10 @@ function _Home() {
             <ChatGptIcon />
           </div>
         </div>
-
+        <PromptToast
+            showModal={showPromptModal}
+            setShowModal={setShowPromptModal}
+        />
         <div
           className={styles["sidebar-body"]}
           onClick={() => {
