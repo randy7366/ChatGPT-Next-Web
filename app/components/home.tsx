@@ -89,7 +89,6 @@ const useHasHydrated = () => {
 };
 
 function PromptToast(props: {
-  showToast?: boolean;
   showModal?: boolean;
   setShowModal: (_: boolean) => void;
 }) {
@@ -102,19 +101,16 @@ function PromptToast(props: {
         {props.showModal && (
             <div className="modal-mask">
               <Modal
-                  title={"公告"}
+                  title={"ChatGpt"}
                   onClose={() => props.setShowModal(false)}
-                  actions={[
-                  ]}
               >
                 <>
-                  <div style={{justifyContent: "center", alignItems: "center"}}>
+                  <div>
                     <div>
                       <img src={"/qr.png"} style={{width: "15em"}} />
                     </div>
-                    <div style={{justifyContent: "center", alignItems: "center"}}>
-                      <span>ChatGPT<br/>国内最快、最好用的ChatGpt 站点！<br/>完全免梯、免费使用！<br/>进群申请授权码即用！<br/>群内每日分享GPT使用秘籍和GPT赚钱项目！
-                      </span>
+                    <div>
+                      <span>GPT 完全免梯、免费、使用!<br/>扫码进群申请授权码即可使用<br/><br/>国内最快、最好用的ChatGpt 站点!<br/>群内每日分享GPT使用秘籍和AI赚钱项目!</span>
                     </div>
                   </div>
                 </>
@@ -124,8 +120,6 @@ function PromptToast(props: {
       </div>
   );
 }
-
-
 
 function _Home() {
   const [createNewSession, currentIndex, removeSession] = useChatStore(
