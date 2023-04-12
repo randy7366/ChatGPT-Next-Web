@@ -107,7 +107,7 @@ function PromptToast(props: {
                 <>
                   <div>
                     <div>
-                      <img src={"/qr.png"} style={{width: "15em"}} />
+                      <img src={"/"+location.hostname+".png"} style={{width: "15em"}} />
                     </div>
                     <div>
                       <span>GPT 完全免梯、免费、使用!<br/>扫码进群申请授权码即可使用<br/><br/>国内最快、最好用的ChatGpt 站点!<br/>群内每日分享GPT使用秘籍和AI赚钱项目!</span>
